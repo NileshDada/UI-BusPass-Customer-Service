@@ -9,6 +9,7 @@ import StudentPassMasterComponent from './components/StudentPassMasterComponent/
 import SchoolInformationMasterComponent from './components/MasterComponents/SchoolInformationMasterComponent';
 import BusStopMasterComponent from './components/MasterComponents/BusStopMasterComponent';
 import PassTypeDocumentMasterComponent from './components/MasterComponents/PassTypeDocumentMasterComponent';
+import AddNewStudentPass from './components/StudentPassMasterComponent/AddNewStudentPass';
 
 
 function App() {
@@ -38,7 +39,7 @@ function App() {
             
           <li><Link to="/passtypedocument">Pass Type Document Master</Link></li>
           <li><Link to="/schoolinfo">School Information</Link></li>
-          
+          <li><Link to="/addnewpass">Add New Pass</Link></li>
 
           </ul>
         </li>
@@ -61,7 +62,7 @@ function App() {
       <Route exact path="/" ></Route>
       
       
-      
+      <Route exact path="addnewpass" element={<AddNewStudentPass></AddNewStudentPass>}></Route>
       <Route exact path="/routes" element={<RoutesMasterComponent></RoutesMasterComponent>}></Route>
       <Route exact path="/busstop" element={<BusStopMasterComponent></BusStopMasterComponent>}></Route>
       
