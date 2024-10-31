@@ -10,9 +10,12 @@ import RoutesMasterService from '../../services/MasterServices/RoutesMasterServi
 import SchoolInformationMasterService from '../../services/MasterServices/SchoolInformationMasterService';
 import CustomerMasterService from '../../services/CustomerMasterService';
 import { useNavigate } from 'react-router-dom';
-export default function StudentPassMasterComponent() {
+import ReportStudentPassMasterService from '../../services/ReportStudentPassMasterService';
+export default function ReportStudentPassMasterComponent() {
     const navigate = useNavigate();
 
+    
+    const [reportStudPassId, setReportStudPassId] = useState('');
     const [custId, setCustId] = useState('');
     const [custFirstName, setCustFirstName] = useState('');
     const [custMiddleName, setCustMiddleName] = useState('');
@@ -98,27 +101,10 @@ export default function StudentPassMasterComponent() {
     //loading all department and roles while page loading at first time
     useEffect(() => {
 
-//To create new student pass
-let custId = Cookies.get('empId')
-CustomerMasterService.getCustomerDetailsById(custId).then(res => {
-    let studPassMaster = res.data;
-
-    setCustId(studPassMaster.custId)
-    setCustFirstName(studPassMaster.custFirstName)
-    setCustMiddleName(studPassMaster.custMiddleName)
-    setCustLastName(studPassMaster.custLastName)
-
-    setCustAddress(studPassMaster.custAddress)
-    setCustDateOfBirth(studPassMaster.custDateOfBirth)
-    setCustEmailId(studPassMaster.custEmailId)
-    setCustMobileNo(studPassMaster.custMobileNo)
-    setCustGender(studPassMaster.custGender)
-}
-);
 
 
 
-        StudentPassMasterService.getStudentPassMastertDetailsByPaging().then((res) => {
+        ReportStudentPassMasterService.getReportStudentPassMastertDetailsByPaging().then((res) => {
             if (res.data.success) {
                 setIsSuccess(true);
                 setCustomerMasters(res.data.responseData.content);
@@ -128,117 +114,17 @@ CustomerMasterService.getCustomerDetailsById(custId).then(res => {
             }
         });
 
-        PassTypeMasterService.ddPassTypeMaster().then((res) => {
-            setPassTypeMasters(res.data);
-            setPassTypeId(res.data?.[0].passTypeId)
-
-            PassTypeMasterService.getPassTypeDetailsById(passTypeId).then(res => {
-                let routesmaster = res.data;
-
-                setPassTypeId(routesmaster.passTypeId)
-                setPassTypeName(routesmaster.passTypeName)
-                setPassTypeDescription(routesmaster.passTypeDescription)
-                setPassTypeEndDate(routesmaster.passTypeEndDate)
-
-                setPassTypeCollectionLocation(routesmaster.passTypeCollectionLocation)
-                setPassTypeAmount(routesmaster.passTypeAmount)
-                setPassTypeAgeLimit(routesmaster.passTypeAgeLimit)
-
-                setRemark(routesmaster.remark)
-            }
-            );
-
-        });
-
-        BusStopMasterService.ddRoutesMaster().then((res) => {
-            setRoutesMasters(res.data);
-            setRoutesId(res.data?.[0].routesId)
-            let routesId = res.data?.[0].routesId;
-
-            RoutesMasterService.getRoutesDetailsById(routesId).then(res => {
-                let routesmaster = res.data;
-
-                setRoutesId(routesmaster.routesId)
-                setRoutesName(routesmaster.routesName)
-                setRoutesStartLocation(routesmaster.routesStartLocation)
-                setRoutesEndLocation(routesmaster.routesEndLocation)
-                setRemark(routesmaster.remark)
-
-            }
-            );
-
-            BusStopMasterService.ddBusStopMaster(routesId).then((res) => {
-                setDdFromBusStopMasters(res.data);
-                setDdToBusStopMasters(res.data);
-                setFromBusStopId(res.data?.[0].busStopId)
-                setToBusStopId(res.data?.[0].busStopId)
-            });
-
-        });
-
-        SchoolInformationMasterService.ddSchoolInformationMaster().then((res) => {
-            setDdSchoolInfoMasters(res.data);
-            setSchoolId(res.data?.[0].schoolId)
-
-            SchoolInformationMasterService.getSchoolInformationDetailsById(schoolId).then(res => {
-                let schoolInformation = res.data;
-
-                setSchoolId(schoolInformation.schoolId)
-                setSchoolIdentificationNumber(schoolInformation.schoolIdentificationNumber)
-                setSchoolName(schoolInformation.schoolName)
-                setSchoolAddress(schoolInformation.schoolAddress)
-                setSchoolAutonomus(schoolInformation.schoolAutonomus)
-                setSchoolEveryDayStartTiming(schoolInformation.schoolEveryDayStartTiming)
-                setSchoolEveryDayEndTiming(schoolInformation.schoolEveryDayEndTiming)
-
-                setRemark(schoolInformation.remark)
-            }
-            );
-
-        });
-
-
+    
 
     }, []);
 
 
 
-
-    const saveStudentPassMastertDetails = (e) => {
-        e.preventDefault()
-
-        let statusCd = 'A';
-        let employeeId = Cookies.get('empId')
-
-        let routesmaster = { custId, passTypeId,passTypeAmount, routesId, fromBusStopId, toBusStopId, schoolId, schoolIdentificationNumber, studCourseName, studClassName, studRollNo, remark, statusCd, employeeId };
-
-        StudentPassMasterService.saveStudentPassMastertDetails(routesmaster).then(res => {
-
-            StudentPassMasterService.getStudentPassMastertDetailsByPaging().then((res) => {
-                if (res.data.success) {
-                    setIsSuccess(true);
-                   
-                    setCustomerMasters(res.data.responseData.content);
-
-
-                }
-                else {
-                    setIsSuccess(false);
-                }
-
-            });
-            setSaveStudentMasterMasterAlert(false);
-
-        }
-        );
-        // window.location.reload(); 
-    }
-
     const showStudentPassMasterDetailsById = (e) => {
 
-        StudentPassMasterService.getStudentPassDetailsById(e).then(res => {
+        ReportStudentPassMasterService.getReportStudentPassDetailsById(e).then(res => {
             let studPassMaster = res.data;
-
+            setReportStudPassId(studPassMaster.reportStudPassId)
             setCustId(studPassMaster.custId)
             setCustFirstName(studPassMaster.custFirstName)
             setCustMiddleName(studPassMaster.custMiddleName)
@@ -282,28 +168,7 @@ CustomerMasterService.getCustomerDetailsById(custId).then(res => {
         // window.location.reload(); 
     }
 
-    // handle region id change
-    //for role , department and designation
-    const handlePassTypeIdChange = (value) => {
-        setPassTypeId(value)
-        let passTypeId = value;
-        PassTypeMasterService.getPassTypeDetailsById(passTypeId).then(res => {
-            let routesmaster = res.data;
-
-            setPassTypeId(routesmaster.passTypeId)
-            setPassTypeName(routesmaster.passTypeName)
-            setPassTypeDescription(routesmaster.passTypeDescription)
-            setPassTypeEndDate(routesmaster.passTypeEndDate)
-
-            setPassTypeCollectionLocation(routesmaster.passTypeCollectionLocation)
-            setPassTypeAmount(routesmaster.passTypeAmount)
-            setPassTypeAgeLimit(routesmaster.passTypeAgeLimit)
-
-            setRemark(routesmaster.remark)
-        }
-        );
-    }
-
+    
     const handleFromBusStopIdChange = (value) => {
         setFromBusStopId(value)
     }
@@ -313,109 +178,15 @@ CustomerMasterService.getCustomerDetailsById(custId).then(res => {
     }
 
 
-    // handle region id change
-    //for role , department and designation
-    const handleSchoolInfoIdChange = (value) => {
-        setPassTypeId(value)
-        let schoolId = value;
-        SchoolInformationMasterService.getSchoolInformationDetailsById(schoolId).then(res => {
-            let schoolInformation = res.data;
+    
+    
 
-            setSchoolId(schoolInformation.schoolId)
-            setSchoolIdentificationNumber(schoolInformation.schoolIdentificationNumber)
-            setSchoolName(schoolInformation.schoolName)
-            setSchoolAddress(schoolInformation.schoolAddress)
-            setSchoolAutonomus(schoolInformation.schoolAutonomus)
-            setSchoolEveryDayStartTiming(schoolInformation.schoolEveryDayStartTiming)
-            setSchoolEveryDayEndTiming(schoolInformation.schoolEveryDayEndTiming)
-
-            setRemark(schoolInformation.remark)
-        }
-        );
-    }
-
-    // handle routes id change
-
-    const handleRoutesIdChange = (value) => {
-        setRoutesId(value)
-        let routesId = value;
-        RoutesMasterService.getRoutesDetailsById(routesId).then(res => {
-            let routesmaster = res.data;
-
-            setRoutesId(routesmaster.routesId)
-            setRoutesName(routesmaster.routesName)
-            setRoutesStartLocation(routesmaster.routesStartLocation)
-            setRoutesEndLocation(routesmaster.routesEndLocation)
-            setRemark(routesmaster.remark)
-        }
-        );
-
-        BusStopMasterService.ddBusStopMaster(routesId).then((res) => {
-            setDdFromBusStopMasters(res.data);
-            setDdToBusStopMasters(res.data);
-            setFromBusStopId(res.data?.[0].busStopId)
-            setToBusStopId(res.data?.[0].busStopId)
-        });
-    }
-
-    const deleteStudentPassById = (e) => {
-        if (window.confirm("Do you want to delete this Student Pass details ?")) {
-            StudentPassMasterService.deleteStudentPassById(e).then(res => {
-                StudentPassMasterService.getStudentPassMastertDetailsByPaging().then((res1) => {
-                    if (res1.data.success) {
-                        setIsSuccess(true);
-                        setCustomerMasters(res1.data.responseData.content);
-                    }
-                    else {
-                        setIsSuccess(false);
-                    }
-                });
-            }
-            );
-
-        } else {
-            // User clicked Cancel
-            console.log("User canceled the action.");
-        }
-        setDeleteCustomerMasterAlert(false);
-    }
-
-    const updateStudentPassMaster = (e) => {
-
-        e.preventDefault()
-        let employeeId = Cookies.get('empId')
-
-        let routesmaster = { custId, custFirstName, custMiddleName, custLastName, custAddress, custMobileNo, custEmailId, custGender, custDateOfBirth, remark, employeeId };
-        StudentPassMasterService.updateStudentPassMastertDetails(routesmaster).then(res => {
-
-            StudentPassMasterService.getStudentPassMastertDetailsByPaging().then((res) => {
-                if (res.data.success) {
-                    setIsSuccess(true);
-                    setCustomerMasters(res.data.responseData.content);
-                }
-                else {
-                    setIsSuccess(false);
-                }
-
-            });
-            setUpdateCustomerMasterAlert(false);
-
-        }
-        );
-
-        setUpdateCustomerMasterAlert(false);
-    }
-
-    //for customer gender male or female
-    const onCustGenderHandler = (event) => {
-        setCustGender(event);
-    };
-
+   
     return (
         <React.Fragment>
 
             <div className="row">
-                <h2 className="text-center">Current Month Student Pass Details</h2>
+                <h2 className="text-center">History Pass Details</h2>
 
                 <div className="col-md-12">
                     <div className="row">
@@ -423,7 +194,7 @@ CustomerMasterService.getCustomerDetailsById(custId).then(res => {
 
                         </div>
                         <div className="col-sm-6" align="right">
-                            <button type="button" className="btn btn-primary " onClick={() => navigate(`/addnewpass`, { replace: true })} >Add New Student Pass</button>
+                            
 
                         </div>
                     </div>
@@ -433,7 +204,7 @@ CustomerMasterService.getCustomerDetailsById(custId).then(res => {
                                 <thead>
                                     <tr>
                                         <th className="text-center">Sr No</th>
-                                        
+                                       
                                         <th className="text-center">Pass Type</th>
                                         <th className="text-center">Pass Amount</th>
                                         <th className="text-center">Pass Start Date</th>
@@ -449,7 +220,7 @@ CustomerMasterService.getCustomerDetailsById(custId).then(res => {
                                     {
                                         customerMasters.map(
                                             (customerMaster, index) =>   //index is inbuilt variable of map started with 0
-                                                <tr key={customerMaster.studPassId}>
+                                                <tr key={customerMaster.reportStudPassId}>
                                                     <td className="text-center">{index + 1}</td>
                                                     
                                                     <td>{customerMaster.passTypeName}</td>
@@ -461,7 +232,7 @@ CustomerMasterService.getCustomerDetailsById(custId).then(res => {
                                                     <td>{customerMaster.studPassStatus}</td>
                                                     <td>
                                                       
-                                                        <button type="submit" className="btn col-sm-offset-1 btn-success" data-toggle="modal" data-target="#showData" onClick={() => showStudentPassMasterDetailsById(customerMaster.studPassId)}>View</button></td>
+                                                        <button type="submit" className="btn col-sm-offset-1 btn-success" data-toggle="modal" data-target="#showData" onClick={() => showStudentPassMasterDetailsById(customerMaster.reportStudPassId)}>View</button></td>
                                                 </tr>
                                         )
                                     }
@@ -607,18 +378,6 @@ CustomerMasterService.getCustomerDetailsById(custId).then(res => {
 
                 </div>
             </div>
-
-
-            {saveStudentMasterMasterAlert && (
-                <AlertboxComponent
-                    show={saveStudentMasterMasterAlert}
-                    title="danger"
-                    message="Do you want to save Student Pass details"
-                    onOk={saveStudentPassMastertDetails}
-                    onClose={handleClose}
-                    isCancleAvailable={true}
-                />
-            )}
 
 
 

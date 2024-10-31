@@ -10,6 +10,7 @@ import SchoolInformationMasterComponent from './components/MasterComponents/Scho
 import BusStopMasterComponent from './components/MasterComponents/BusStopMasterComponent';
 import PassTypeDocumentMasterComponent from './components/MasterComponents/PassTypeDocumentMasterComponent';
 import AddNewStudentPass from './components/StudentPassMasterComponent/AddNewStudentPass';
+import ReportStudentPassMasterComponent from './components/StudentPassMasterComponent/ReportStudentPassMasterComponent';
 
 
 function App() {
@@ -24,8 +25,8 @@ function App() {
         
         <ul className="nav navbar-nav">
 
-        
-        <li><Link to="/studentpass">Student Pass Master</Link></li>  
+        <li><Link to="/studentpass">New Student Pass</Link></li>    
+        <li><Link to="/historypass">Student Pass History</Link></li>  
           <li className="dropdown">
           <a className="dropdown-toggle" data-toggle="dropdown" href="#">Master Records
             <span className="caret"></span></a>
@@ -69,6 +70,7 @@ function App() {
       <Route exact path="/passtype" element={<PassTypeMasterComponent></PassTypeMasterComponent>}></Route>
       
       <Route exact path="/studentpass" element={<StudentPassMasterComponent></StudentPassMasterComponent>}></Route>
+      <Route exact path="/historypass" element={<ReportStudentPassMasterComponent></ReportStudentPassMasterComponent>}></Route>
       <Route exact path="/schoolinfo" element={<SchoolInformationMasterComponent></SchoolInformationMasterComponent>}></Route>
 
       <Route exact path="/passtypedocument" element={<PassTypeDocumentMasterComponent></PassTypeDocumentMasterComponent>} ></Route>
